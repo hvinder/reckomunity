@@ -3,13 +3,10 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const { sequelize } = require("./model");
 const router = require("./routes");
 
 const app = express();
 app.use(bodyParser.json());
-app.set("sequelize", sequelize);
-app.set("models", sequelize.models);
 
 app.use(router);
 

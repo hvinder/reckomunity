@@ -11,12 +11,15 @@ const User = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      allowNull: false,
     },
     fname: {
       type: DataTypes.STRING(255),
+      allowNull: false,
     },
     sname: {
       type: DataTypes.STRING(255),
+      allowNull: false,
     },
     profile_picture: {
       type: DataTypes.TEXT,
@@ -24,6 +27,7 @@ const User = sequelize.define(
     },
     bio: {
       type: DataTypes.TEXT,
+      allowNull: true,
     },
     created_at: {
       type: DataTypes.DATE,
@@ -43,18 +47,23 @@ const Recommendation = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      allowNull: false,
     },
     user_id: {
       type: DataTypes.INTEGER,
+      allowNull: false,
     },
     title: {
       type: DataTypes.STRING(255),
+      allowNull: false,
     },
     caption: {
       type: DataTypes.TEXT,
+      allowNull: true,
     },
     category: {
       type: DataTypes.STRING(50),
+      allowNull: false,
     },
     pictures: {
       type: DataTypes.ARRAY(DataTypes.TEXT),
@@ -84,13 +93,13 @@ const Collection = sequelize.define(
     },
     name: {
       type: DataTypes.STRING(255),
+      allowNull: false,
     },
     description: {
       type: DataTypes.TEXT,
     },
   },
   {
-    sequelize,
     tableName: "collections",
     timestamps: true,
   }
@@ -126,11 +135,26 @@ const CollectionRecommendation = sequelize.define(
 
 User.hasMany(Recommendation, { foreignKey: "user_id" });
 Recommendation.belongsTo(User, { foreignKey: "user_id" });
-Recommendation.belongsToMany(Collection, { through: CollectionRecommendation });
+Recommendation.belongsToMany(Collection, {
+  through: CollectionRecommendation,
+  foreignKey: "recommendation_id",
+});
 Collection.belongsTo(User, { foreignKey: "user_id" });
 Collection.belongsToMany(Recommendation, {
   through: CollectionRecommendation,
+  foreignKey: "collection_id",
 });
+
+(async () => {
+  try {
+    // await sequelize.sync({ force: false });
+    await Collection.sync({ force: false });
+    await CollectionRecommendation.sync({ force: false });
+    console.log("Database synchronized successfully");
+  } catch (error) {
+    console.error("Error synchronizing database:", error);
+  }
+})();
 
 module.exports = {
   sequelize,
