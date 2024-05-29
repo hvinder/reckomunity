@@ -1,4 +1,5 @@
 const { CollectionService } = require("../services");
+const { NotFoundError } = require("../utils/error");
 
 const createCollection = async (req, res) => {
   try {
@@ -94,6 +95,10 @@ const getCollection = async (req, res) => {
       collectionId,
       userId: user.id,
     });
+
+    if (!collection) {
+      throw NotFoundError("Collection not found");
+    }
 
     res.send(collection);
   } catch (error) {

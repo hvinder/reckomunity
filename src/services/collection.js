@@ -5,7 +5,7 @@ const {
   Recommendation,
 } = require("../model");
 const { BadRequestError, NotFoundError } = require("../utils/error");
-const { RecommendationService } = require("./");
+const RecommendationService = require("./recommendation");
 
 class CollectionService {
   constructor() {
