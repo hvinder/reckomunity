@@ -1,5 +1,4 @@
-const { CollectionService, RecommendationService } = require("../services");
-const { BadRequestError, NotFoundError } = require("../utils/error");
+const { CollectionService } = require("../services");
 
 const createCollection = async (req, res) => {
   try {
@@ -26,23 +25,11 @@ const addRecommendationToCollection = async (req, res) => {
     const { user } = req;
     const { collectionId, recommendationId } = req.params;
 
-    const collection = await CollectionService.getById({
+    await CollectionService.addRecommendation({
       collectionId,
-      userId: user.id,
-    });
-    if (!collection) {
-      throw new NotFoundError("Collection not found");
-    }
-
-    const recommendation = await RecommendationService.getById({
       recommendationId,
       userId: user.id,
     });
-    if (!recommendation) {
-      throw new NotFoundError("Recommendation not found");
-    }
-
-    await CollectionService.addRecommendation(collection, recommendation);
 
     res.status(201).send({ message: "Recommendation added to collection" });
   } catch (error) {
@@ -59,31 +46,12 @@ const removeRecommendationFromCollection = async (req, res) => {
     const { user } = req;
     const { collectionId, recommendationId } = req.params;
 
-    const collection = await CollectionService.getById({
+    await CollectionService.removeRecommendation({
       collectionId,
+      recommendationId,
       userId: user.id,
     });
-    if (!collection) {
-      throw new NotFoundError("Collection not found");
-    }
 
-    const recommendation = await RecommendationService.getById({
-      recommendationId,
-    });
-    if (!recommendation) {
-      throw new NotFoundError("Recommendation not found");
-    }
-
-    const collectionRecommendation =
-      await CollectionService.getCollectionRecommendation({
-        collectionId: collection.id,
-        recommendationId: recommendationId,
-      });
-    if (!collectionRecommendation) {
-      throw new NotFoundError("Recommendation not found in collection");
-    }
-
-    await collectionRecommendation.destroy();
     res.send({ message: "Recommendation removed from collection" });
   } catch (error) {
     console.error(error);
@@ -141,16 +109,7 @@ const deleteCollection = async (req, res) => {
     const { user } = req;
     const { collectionId } = req.params;
 
-    const collection = await CollectionService.getById({
-      collectionId,
-      userId: user.id,
-    });
-
-    if (!collection) {
-      throw new NotFoundError("Collection not found");
-    }
-
-    await CollectionService.delete(collection);
+    await CollectionService.delete({ collectionId, userId: user.id });
 
     res.send({ message: "Collection deleted" });
   } catch (error) {
