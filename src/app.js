@@ -4,6 +4,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const router = require("./routes");
+const syncDB = require("./scripts/syncDBjs");
+
+syncDB();
 
 const app = express();
 app.use(bodyParser.json());

@@ -145,17 +145,6 @@ Collection.belongsToMany(Recommendation, {
   foreignKey: "collection_id",
 });
 
-(async () => {
-  try {
-    // await sequelize.sync({ force: false });
-    await Collection.sync({ force: false });
-    await CollectionRecommendation.sync({ force: false });
-    console.log("Database synchronized successfully");
-  } catch (error) {
-    console.error("Error synchronizing database:", error);
-  }
-})();
-
 module.exports = {
   sequelize,
   User,
