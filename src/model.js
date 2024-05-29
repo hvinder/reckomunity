@@ -1,5 +1,11 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) {
+  console.error("DATABASE_URL environment variable is required");
+  process.exit(1);
+}
+
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
 });

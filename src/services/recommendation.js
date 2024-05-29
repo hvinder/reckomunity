@@ -1,9 +1,12 @@
 const { Recommendation } = require("../model");
 
 class RecommendationService {
+  constructor() {
+    this.Recommendation = Recommendation;
+  }
   getById = async ({ recommendationId, userId }) => {
     try {
-      return await Recommendation.findOne({
+      return await this.Recommendation.findOne({
         where: { id: recommendationId, ...(userId && { user_id: userId }) },
       });
     } catch (error) {

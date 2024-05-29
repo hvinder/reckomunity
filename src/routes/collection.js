@@ -6,7 +6,7 @@ const {
   getCollections,
   getCollection,
   deleteCollection,
-} = require("../controllers/collection.js");
+} = require("../controllers/collection");
 
 const collectionsRouter = express.Router();
 
